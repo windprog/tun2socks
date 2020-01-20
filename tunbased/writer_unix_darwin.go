@@ -5,7 +5,7 @@ package tunbased
 import (
 	"github.com/google/netstack/tcpip"
 	"syscall"
-	"tun2socks/third_party/tunbased/rawfile_block"
+	"tun2socks/tun2socks/tunbased/rawfile_block"
 	"unsafe"
 )
 

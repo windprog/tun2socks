@@ -13,12 +13,11 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"os/exec"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
-	"tun2socks/tun2socks/tunbased"
+	"tun2socks/tunbased"
 )
 
 // echo service
@@ -46,22 +45,6 @@ func echo(wq *waiter.Queue, ep tcpip.Endpoint) {
 	}
 }
 
-// exec shell
-func execCommand(name, sargs string) error {
-	args := strings.Split(sargs, " ")
-	cmd := exec.Command(name, args...)
-	log.Printf("exec command: %s %s\n", name, sargs)
-	return cmd.Run()
-}
-
-// add route table
-func addRoute(tun string, subnet *net.IPNet) error {
-	ip := subnet.IP
-	maskIP := net.IP(subnet.Mask)
-	sargs := fmt.Sprintf("-n add -net %s -netmask %s -interface %s", ip.String(), maskIP.String(), tun)
-	return execCommand("route", sargs)
-}
-
 func getFieldItem(target reflect.Value, fieldName string) reflect.Value {
 	names := strings.Split(fieldName, ".")
 	cntName := names[0]
@@ -79,7 +62,8 @@ func getFieldItem(target reflect.Value, fieldName string) reflect.Value {
 	panic(fmt.Sprintf("%v field:%s not found", target, fieldName))
 }
 
-// sudo go run cmd/netstack/main.go utun1 10.0.0.2 8090
+// go build -o tun_tcp_echo
+// sudo ./tun_tcp_echo utun2 10.0.0.2 8090
 // telnet 10.0.0.2 8090
 func main() {
 	if len(os.Args) != 4 {
@@ -139,7 +123,7 @@ func main() {
 	tunbased.Ifconfig(ifce.Name(), "10.0.0.2/24", mtu)
 
 	linkEP, err := tunbased.New(&tunbased.Options{
-		Ifce: ifce,
+		Ifce:           ifce,
 		MTU:            mtu,
 		EthernetHeader: false,
 		Address:        tcpip.LinkAddress(maddr),

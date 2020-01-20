@@ -9,7 +9,7 @@ import (
 	"github.com/google/netstack/tcpip/header"
 	"github.com/songgao/water"
 	"syscall"
-	"tun2socks/third_party/tunbased/rawfile_block"
+	"tun2socks/tunbased/rawfile_block"
 )
 
 type WaterRWUnixReadv struct {
